@@ -1,14 +1,14 @@
 import React from 'react';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa'; // Import clean icons from react-icons
 
-function Card({ taskObj, index }) {
+function Card({ taskObj, index, deleteTask, updateTask }) {
 
-  // Dynamic color based on index (you can modify logic later)
   const colors = [
-    { primaryColor: "#5D93E1" }, // Blue
-    { primaryColor: "#F9D288" }, // Yellow
-    { primaryColor: "#5DC250" }, // Green
-    { primaryColor: "#F48687" }, // Red
-    { primaryColor: "#B964F7" }  // Purple
+    { primaryColor: "#5D93E1" }, 
+    { primaryColor: "#F9D288" }, 
+    { primaryColor: "#5DC250" }, 
+    { primaryColor: "#F48687" }, 
+    { primaryColor: "#B964F7" }  
   ];
 
   const currentColor = colors[index % colors.length];
@@ -22,9 +22,15 @@ function Card({ taskObj, index }) {
         </span>
         <p className="mt-3">{taskObj.Description}</p>
 
-        <div style={{ position: "absolute", right: "20px", bottom: "20px" }}>
-          <i className="far fa-edit" style={{ color: currentColor.primaryColor, marginRight: "10px", cursor: "pointer" }}></i>
-          <i className="fas fa-trash-alt" style={{ color: currentColor.primaryColor, cursor: "pointer" }}></i>
+        <div style={{ position: "absolute", right: "20px", bottom: "20px", display: 'flex' }}>
+          <FaEdit 
+            style={{ color: currentColor.primaryColor, marginRight: "15px", cursor: "pointer", fontSize: "20px" }} 
+            onClick={() => updateTask(index)}
+          />
+          <FaTrashAlt 
+            style={{ color: currentColor.primaryColor, cursor: "pointer", fontSize: "20px" }} 
+            onClick={() => deleteTask(index)}
+          />
         </div>
       </div>
     </div>

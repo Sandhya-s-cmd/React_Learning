@@ -5,6 +5,8 @@ import Card from './Card';
 const TodoList = memo(() => {
   const [modal, setModal] = useState(false); 
   const [tasklist, setTaskList] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(null);
 
   useEffect(() => {
     let arr = localStorage.getItem("taskList");
@@ -20,10 +22,29 @@ const TodoList = memo(() => {
 
   const saveTask = (taskObj) => {
     let tempList = [...tasklist];
-    tempList.push(taskObj);
+    if (editMode) {
+      tempList[currentIndex] = taskObj; // update existing task
+      setEditMode(false);
+      setCurrentIndex(null);
+    } else {
+      tempList.push(taskObj);
+    }
     localStorage.setItem("taskList", JSON.stringify(tempList));
     setTaskList(tempList);
     setModal(false);
+  }
+
+  const deleteTask = (index) => {
+    let tempList = [...tasklist];
+    tempList.splice(index, 1);
+    localStorage.setItem("taskList", JSON.stringify(tempList));
+    setTaskList(tempList);
+  }
+
+  const updateTask = (index) => {
+    setEditMode(true);
+    setCurrentIndex(index);
+    setModal(true);
   }
 
   return (
@@ -37,11 +58,23 @@ const TodoList = memo(() => {
 
       <div className='task-container d-flex flex-wrap'>
         {tasklist.map((obj, index) => (
-          <Card taskObj={obj} index={index} key={index} />
+          <Card 
+            taskObj={obj} 
+            index={index} 
+            key={index} 
+            deleteTask={deleteTask} 
+            updateTask={updateTask}
+          />
         ))}
       </div>
 
-      <CreateTaskPopup toggle={toggle} modal={modal} save={saveTask} /> 
+      <CreateTaskPopup 
+        toggle={toggle} 
+        modal={modal} 
+        save={saveTask} 
+        editMode={editMode} 
+        task={tasklist[currentIndex]}
+      /> 
     </>
   );
 });
